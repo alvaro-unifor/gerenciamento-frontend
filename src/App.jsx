@@ -1,8 +1,7 @@
-// Caminho: src/App.jsx
-
+// src/App.jsx
 import React, { useState } from 'react';
 import AuthComponent from './components/AuthComponent.jsx';
-import ReceitaComponent from './components/ReceitaComponent.jsx';
+import Dashboard from './components/Dashboard.jsx';
 import './index.css';
 
 const App = () => {
@@ -15,7 +14,7 @@ const App = () => {
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
             {token ? (
-                <ReceitaComponent token={token} />
+                <Dashboard token={token} />
             ) : (
                 <AuthComponent onLoginSuccess={handleLoginSuccess} />
             )}

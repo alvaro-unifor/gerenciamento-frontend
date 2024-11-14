@@ -1,5 +1,4 @@
-// Caminho: src/components/AuthComponent.jsx
-
+// src/components/AuthComponent.jsx
 import React, { useState } from 'react';
 import { login, register } from '../services/AuthService.js';
 

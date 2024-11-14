@@ -12,7 +12,9 @@ export const login = async (credentials) => {
         if (!response.ok) {
             throw new Error('Network response was not ok ' + response.statusText);
         }
-        return await response.json();
+        const data = await response.json();
+        localStorage.setItem('token', data.token); // Armazena o token no localStorage
+        return data;
     } catch (error) {
         console.error('There was a problem with the fetch operation:', error);
     }
