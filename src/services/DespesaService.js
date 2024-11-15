@@ -1,4 +1,3 @@
-// src/services/DespesaService.js
 const API_URL = 'http://localhost:8080';
 
 const getAuthHeaders = (token) => ({
@@ -6,9 +5,9 @@ const getAuthHeaders = (token) => ({
     'Authorization': `Bearer ${token}`
 });
 
-export const listarDespesas = async (token) => {
+export const listarDespesas = async (token, userId) => {
     try {
-        const response = await fetch(`${API_URL}/listar-despesas`, {
+        const response = await fetch(`${API_URL}/listar-despesas?usuarioId=${userId}`, {
             headers: getAuthHeaders(token)
         });
         if (!response.ok) {
@@ -22,10 +21,13 @@ export const listarDespesas = async (token) => {
 
 export const criarDespesa = async (despesa, token) => {
     try {
+        const userId = localStorage.getItem('id');
+        const despesaComUsuario = { ...despesa, usuario: userId };
+
         const response = await fetch(`${API_URL}/criar-despesa`, {
             method: 'POST',
             headers: getAuthHeaders(token),
-            body: JSON.stringify(despesa)
+            body: JSON.stringify(despesaComUsuario)
         });
         if (!response.ok) {
             throw new Error('Network response was not ok ' + response.statusText);
