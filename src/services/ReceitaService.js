@@ -10,7 +10,7 @@ export const criarReceita = async (receita, token) => {
         const userId = localStorage.getItem('id');
         const despesaComUsuario = { ...receita, usuario: userId };
 
-        const response = await fetch(`${API_URL}/criar-receita`, {
+        const response = await fetch(`${API_URL}/criar-receita`,  {
             method: 'POST',
             headers: getAuthHeaders(token),
             body: JSON.stringify(despesaComUsuario)

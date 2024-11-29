@@ -63,7 +63,7 @@ const Dashboard = ({ token }) => {
 
     return (
         <div className="bg-white p-8 rounded shadow-md w-full max-w-4xl">
-            <h1 className="text-3xl mb-6">Dashboard</h1>
+            <h1 className="text-3xl mb-6">Gerenciamento AI</h1>
             <div className="mb-6">
                 <h2 className="text-2xl mb-2">Receitas</h2>
                 <table className="min-w-full bg-white mb-4">
