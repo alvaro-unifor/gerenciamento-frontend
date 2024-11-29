@@ -81,7 +81,7 @@ const Dashboard = ({ token }) => {
                                 <td className="border px-4 py-2">{receita.descricao}</td>
                                 <td className="border px-4 py-2">{receita.valor}</td>
                                 <td className="border px-4 py-2">{receita.data}</td>
-                                <td className="border px-4 py-2">{receita.categoria ? receita.categoria.nome : 'Sem Categoria'}</td>
+                                <td className="border px-4 py-2">{receita.descricaoCategoria ? receita.descricaoCategoria : 'Sem Categoria'}</td>
                             </tr>
                         ))}
                     </tbody>
@@ -145,7 +145,7 @@ const Dashboard = ({ token }) => {
                                 <td className="border px-4 py-2">{despesa.descricao}</td>
                                 <td className="border px-4 py-2">{despesa.valor}</td>
                                 <td className="border px-4 py-2">{despesa.data}</td>
-                                <td className="border px-4 py-2">{despesa.categoria ? despesa.categoria.nome : 'Sem Categoria'}</td>
+                                <td className="border px-4 py-2">{despesa.descricaoCategoria ? despesa.descricaoCategoria : 'Sem Categoria'}</td>
                             </tr>
                         ))}
                     </tbody>
