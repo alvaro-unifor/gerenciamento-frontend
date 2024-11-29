@@ -1,4 +1,3 @@
-// src/components/Dashboard.jsx
 import React, { useEffect, useState } from 'react';
 import { listarReceitas, criarReceita } from '../services/ReceitaService';
 import { listarDespesas, criarDespesa } from '../services/DespesaService';
@@ -12,17 +11,19 @@ const Dashboard = ({ token }) => {
     const [novaDespesa, setNovaDespesa] = useState({ descricao: '', valor: '', data: '', categoria: '' });
     const [novaCategoria, setNovaCategoria] = useState({ nome: '', tipo: 'RECEITA' });
 
+    const userId = localStorage.getItem('id');
+
     useEffect(() => {
         const fetchData = async () => {
-            const receitasData = await listarReceitas(token);
-            const despesasData = await listarDespesas(token);
+            const receitasData = await listarReceitas(token, userId);
+            const despesasData = await listarDespesas(token, userId);
             const categoriasData = await listarCategorias(token);
             setReceitas(receitasData);
             setDespesas(despesasData);
             setCategorias(categoriasData);
         };
         fetchData();
-    }, [token]);
+    }, [token, userId]);
 
     const handleReceitaChange = (e) => {
         const { name, value } = e.target;
@@ -41,14 +42,14 @@ const Dashboard = ({ token }) => {
 
     const handleReceitaSubmit = async (e) => {
         e.preventDefault();
-        const createdReceita = await criarReceita({ ...novaReceita, usuario: 1 }, token); // Substitua 1 pelo ID do usuário logado
+        const createdReceita = await criarReceita({ ...novaReceita, usuario: userId }, token);
         setReceitas([...receitas, createdReceita]);
         setNovaReceita({ descricao: '', valor: '', data: '', categoria: '' });
     };
 
     const handleDespesaSubmit = async (e) => {
         e.preventDefault();
-        const createdDespesa = await criarDespesa(novaDespesa, token);
+        const createdDespesa = await criarDespesa({ ...novaDespesa, usuario: userId }, token);
         setDespesas([...despesas, createdDespesa]);
         setNovaDespesa({ descricao: '', valor: '', data: '', categoria: '' });
     };
@@ -62,7 +63,7 @@ const Dashboard = ({ token }) => {
 
     return (
         <div className="bg-white p-8 rounded shadow-md w-full max-w-4xl">
-            <h1 className="text-3xl mb-6">Dashboard</h1>
+            <h1 className="text-3xl mb-6">Gerenciamento AI</h1>
             <div className="mb-6">
                 <h2 className="text-2xl mb-2">Receitas</h2>
                 <table className="min-w-full bg-white mb-4">

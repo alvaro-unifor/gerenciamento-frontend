@@ -7,10 +7,13 @@ const getAuthHeaders = (token) => ({
 
 export const criarReceita = async (receita, token) => {
     try {
-        const response = await fetch(`${API_URL}/criar-receita`, {
+        const userId = localStorage.getItem('id');
+        const despesaComUsuario = { ...receita, usuario: userId };
+
+        const response = await fetch(`${API_URL}/criar-receita`,  {
             method: 'POST',
             headers: getAuthHeaders(token),
-            body: JSON.stringify(receita)
+            body: JSON.stringify(despesaComUsuario)
         });
         if (!response.ok) {
             throw new Error('Network response was not ok ' + response.statusText);
@@ -37,9 +40,9 @@ export const atualizarReceita = async (id, receita, token) => {
     }
 };
 
-export const listarReceitas = async (token) => {
+export const listarReceitas = async (token, userId) => {
     try {
-        const response = await fetch(`${API_URL}/listar-receitas`, {
+        const response = await fetch(`${API_URL}/listar-receitas?usuarioId=${userId}`, {
             headers: getAuthHeaders(token)
         });
         if (!response.ok) {
