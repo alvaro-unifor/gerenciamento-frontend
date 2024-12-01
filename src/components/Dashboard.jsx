@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { listarReceitas, criarReceita , deletarReceita, atualizarReceita, listarMaioresReceitas,listarMenoresReceitas,listarReceitasPorMes,listarReceitasPorPeriodo} from '../services/ReceitaService';
-import { listarDespesas, criarDespesa, deletarDespesa, atualizarDespesa} from '../services/DespesaService';
+import { listarDespesas, criarDespesa, deletarDespesa, atualizarDespesa, listarMaioresDespesas, listarMenoresDespesas, listarDespesasPorMes, listarDespesasPorPeriodo} from '../services/DespesaService';
 import { listarCategorias, cadastrarCategoria } from '../services/CategoriaService';
+import {Bar} from 'react-chartjs-2';
+import {Chart as ChartJS, CategoryScale, LinearScale, Title, Tooltip, Legend, BarElement} from 'chart.js'; 
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const Dashboard = ({ token }) => {
     const [receitas, setReceitas] = useState([]);
@@ -14,6 +18,7 @@ const Dashboard = ({ token }) => {
     const [receitaEditando, setReceitaEditando] = useState(null);
     const [filtroSelecionado, setFiltroSelecionado] = useState('todas');
     const [receitasFiltradas, setReceitasFiltradas] = useState([]);
+    const [despesasFiltradas, setDespesasFiltradas] = useState([]);
     const [filtros, setFiltros] = useState({ ano: '', mes: '', dataInicio: '', dataFim: '', limite: '' });
 
 
@@ -125,7 +130,7 @@ const Dashboard = ({ token }) => {
         }
     };
     
-    const aplicarFiltro = async () => {
+    const aplicarFiltroReceita = async () => {
         try {
             switch (filtroSelecionado) {
                 case 'todas':
@@ -173,10 +178,83 @@ const Dashboard = ({ token }) => {
             console.error('Erro ao aplicar o filtro:', error);
         }
     };
+
+    const aplicarFiltroDespesa = async () => {
+        try {
+            switch (filtroSelecionado) {
+                case 'todas':
+                    const todasDespesas = await listarDespesas(token, userId);
+                    setDespesasFiltradas(todasDespesas);
+                    break;
+                case 'porMes':
+                    const { ano, mes } = filtros;
+                    if (ano && mes) {
+                        const receitasPorMes = await listarDespesasPorMes(ano, mes, token);
+                        setDespesasFiltradas(receitasPorMes);
+                    } else {
+                        alert('Preencha o ano e o mês para filtrar.');
+                    }
+                    break;
+                case 'porPeriodo':
+                    const { dataInicio, dataFim } = filtros;
+                    if (dataInicio && dataFim) {
+                        const despesasPorPeriodo = await listarDespesasPorPeriodo(dataInicio, dataFim, token);
+                        setDespesasFiltradas(despesasPorPeriodo);
+                    } else {
+                        alert('Preencha as datas de início e fim para filtrar.');
+                    }
+                    break;
+                case 'maiores':
+                    if (filtros.limite) {
+                        const maioresDespesas = await listarMaioresDespesas(filtros.limite, token);
+                        setDespesasFiltradas(maioresDespesas);
+                    } else {
+                        alert('Preencha o limite para filtrar.');
+                    }
+                    break;
+                case 'menores':
+                    if (filtros.limite) {
+                        const menoresDespesas = await listarMenoresDespesas(filtros.limite, token);
+                        setDespesasFiltradas(menoresDespesas);
+                    } else {
+                        alert('Preencha o limite para filtrar.');
+                    }
+                    break;
+                default:
+                    alert('Filtro não implementado.');
+            }
+        } catch (error) {
+            console.error('Erro ao aplicar o filtro:', error);
+        }
+    };
     
     
     
-    
+    const receitasData = {
+        labels: receitas.map((receita) => receita.descricao),
+        datasets: [
+            {
+                label: 'Receitas',
+                data: receitas.map((receita) => receita.valor),
+                backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1,
+            },
+        ],
+    };
+
+    const despesasData = {
+        labels: despesas.map((despesa) => despesa.descricao),
+        datasets: [
+            {
+                label: 'Despesas',
+                data: despesas.map((despesa) => despesa.valor),
+                backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1,
+            },
+        ],
+    };
   
 
 
@@ -190,7 +268,8 @@ return (
 
         {/* Seção de Receitas */}
         <div className="mb-6">
-    <h2 className="text-2xl mb-2">Receitas</h2>
+            <h2 className="text-2xl mb-2">Receitas</h2>
+            <Bar data={receitasData} />
 
     {/* Filtros de Receitas */}
     <div className="mb-4">
@@ -255,7 +334,7 @@ return (
         )}
 
         <button
-            onClick={aplicarFiltro}
+            onClick={aplicarFiltroReceita}
             className="bg-blue-500 text-white px-4 py-2 rounded"
         >
             Aplicar Filtro
@@ -414,6 +493,78 @@ return (
         {/* Seção de Despesas */}
         <div className="mb-6">
             <h2 className="text-2xl mb-2">Despesas</h2>
+            <Bar data={despesasData} />
+
+                {/* Filtros de Receitas */}
+    <div className="mb-4">
+        <h3 className="text-xl mb-2">Filtrar Despesas</h3>
+        <select
+            value={filtroSelecionado}
+            onChange={(e) => setFiltroSelecionado(e.target.value)}
+            className="mb-2 p-2 border border-gray-300 rounded w-full"
+        >
+            <option value="todas">Todas as Despesas</option>
+            <option value="porMes">Por Mês</option>
+            <option value="porPeriodo">Por Período</option>
+            <option value="maiores">Maiores Despesas</option>
+            <option value="menores">Menores Despesas</option>
+        </select>
+
+        {/* Inputs dinâmicos para filtros */}
+        {filtroSelecionado === 'porMes' && (
+            <div className="flex space-x-2 mb-2">
+                <input
+                    type="number"
+                    placeholder="Ano"
+                    value={filtros.ano}
+                    onChange={(e) => setFiltros({ ...filtros, ano: e.target.value })}
+                    className="p-2 border border-gray-300 rounded"
+                />
+                <input
+                    type="number"
+                    placeholder="Mês"
+                    value={filtros.mes}
+                    onChange={(e) => setFiltros({ ...filtros, mes: e.target.value })}
+                    className="p-2 border border-gray-300 rounded"
+                />
+            </div>
+        )}
+        {filtroSelecionado === 'porPeriodo' && (
+            <div className="flex space-x-2 mb-2">
+                <input
+                    type="date"
+                    placeholder="Data Início"
+                    value={filtros.dataInicio}
+                    onChange={(e) => setFiltros({ ...filtros, dataInicio: e.target.value })}
+                    className="p-2 border border-gray-300 rounded"
+                />
+                <input
+                    type="date"
+                    placeholder="Data Fim"
+                    value={filtros.dataFim}
+                    onChange={(e) => setFiltros({ ...filtros, dataFim: e.target.value })}
+                    className="p-2 border border-gray-300 rounded"
+                />
+            </div>
+        )}
+        {(filtroSelecionado === 'maiores' || filtroSelecionado === 'menores') && (
+            <input
+                type="number"
+                placeholder="Limite"
+                value={filtros.limite}
+                onChange={(e) => setFiltros({ ...filtros, limite: e.target.value })}
+                className="mb-2 p-2 border border-gray-300 rounded w-full"
+            />
+        )}
+
+        <button
+            onClick={aplicarFiltroDespesa}
+            className="bg-blue-500 text-white px-4 py-2 rounded"
+        >
+            Aplicar Filtro
+        </button>
+    </div>
+
             <table className="min-w-full bg-white mb-4">
                 <thead>
                     <tr>
@@ -424,30 +575,30 @@ return (
                         <th className="py-2">Ações</th>
                     </tr>
                 </thead>
-                <tbody>
-                    {despesas.map((despesa) => (
-                        <tr key={despesa.id}>
-                            <td className="border px-4 py-2">{despesa.descricao}</td>
-                            <td className="border px-4 py-2">{despesa.valor}</td>
-                            <td className="border px-4 py-2">{despesa.data}</td>
-                            <td className="border px-4 py-2">{despesa.descricaoCategoria ? despesa.descricaoCategoria : 'Sem Categoria'}</td>
-                            <td className="border px-4 py-2 flex space-x-2">
-                                <button
-                                    onClick={() => handleDeleteDespesa(despesa.id)}
-                                    className="bg-red-500 text-white px-4 py-2 rounded"
-                                >
-                                    Excluir
-                                </button>
-                                <button
-                                    onClick={() => handleEditDespesa(despesa)}
-                                    className="bg-blue-500 text-white px-4 py-2 rounded"
-                                >
-                                    Editar
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
+                    <tbody>
+                {(despesasFiltradas.length > 0 ? despesasFiltradas : despesas).map((despesa) => (
+                    <tr key={despesa.id}>
+                        <td className="border px-4 py-2">{despesa.descricao}</td>
+                        <td className="border px-4 py-2">{despesa.valor}</td>
+                        <td className="border px-4 py-2">{despesa.data}</td>
+                        <td className="border px-4 py-2">{despesa.descricaoCategoria ? despesa.descricaoCategoria : 'Sem Categoria'}</td>
+                        <td className="border px-4 py-2 flex space-x-2">
+                            <button
+                                onClick={() => handleDeleteReceita(despesa.id)}
+                                className="bg-red-500 text-white px-4 py-2 rounded"
+                            >
+                                Excluir
+                            </button>
+                            <button
+                                onClick={() => handleEditReceita(despesa)}
+                                className="bg-blue-500 text-white px-4 py-2 rounded"
+                            >
+                                Editar
+                            </button>
+                        </td>
+                    </tr>
+                ))}
+            </tbody>
             </table>
 
             <form onSubmit={handleDespesaSubmit} className="mb-4">
