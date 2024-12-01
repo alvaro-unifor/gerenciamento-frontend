@@ -40,20 +40,6 @@ export const atualizarReceita = async (id, receita, token) => {
     }
 };
 
-export const listarReceitas = async (token, userId) => {
-    try {
-        const response = await fetch(`${API_URL}/listar-receitas?usuarioId=${userId}`, {
-            headers: getAuthHeaders(token)
-        });
-        if (!response.ok) {
-            throw new Error('Network response was not ok ' + response.statusText);
-        }
-        return await response.json();
-    } catch (error) {
-        console.error('There was a problem with the fetch operation:', error);
-    }
-};
-
 export const deletarReceita = async (id, token) => {
     try {
         const response = await fetch(`${API_URL}/deletar-receita/${id}`, {
@@ -69,6 +55,19 @@ export const deletarReceita = async (id, token) => {
     }
 };
 
+export const listarReceitas = async (token, userId) => {
+    try {
+        const response = await fetch(`${API_URL}/listar-receitas?usuarioId=${userId}`, {
+            headers: getAuthHeaders(token)
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+    }
+};
 export const listarReceitasPorMes = async (ano, mes, token) => {
     try {
         const response = await fetch(`${API_URL}/receitas/mes/${ano}/${mes}`, {
