@@ -68,3 +68,59 @@ export const deletarDespesa = async (id, token) => {
         console.error('There was a problem with the fetch operation:', error);
     }
 };
+
+export const listarDespesasPorMes = async (ano, mes, token) => {
+    try {
+        const response = await fetch(`${API_URL}/despesas/mes/${ano}/${mes}`, {
+            headers: getAuthHeaders(token)
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+    }
+};
+
+export const listarDespesasPorPeriodo = async (dataInicio, dataFim, token) => {
+    try {
+        const response = await fetch(`${API_URL}/despesas/periodo?dataInicio=${dataInicio}&dataFim=${dataFim}`, {
+            headers: getAuthHeaders(token)
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+    }
+};
+
+export const listarMaioresDespesas = async (limite, token) => {
+    try {
+        const response = await fetch(`${API_URL}/despesas/maiores?limite=${limite}`, {
+            headers: getAuthHeaders(token)
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+    }
+};
+
+export const listarMenoresDespesas = async (limite, token) => {
+    try {
+        const response = await fetch(`${API_URL}/despesas/menores?limite=${limite}`, {
+            headers: getAuthHeaders(token)
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+    }
+};
