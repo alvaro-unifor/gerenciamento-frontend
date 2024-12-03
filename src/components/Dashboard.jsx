@@ -584,13 +584,13 @@ return (
                         <td className="border px-4 py-2">{despesa.descricaoCategoria ? despesa.descricaoCategoria : 'Sem Categoria'}</td>
                         <td className="border px-4 py-2 flex space-x-2">
                             <button
-                                onClick={() => handleDeleteReceita(despesa.id)}
+                                onClick={() => handleDeleteDespesa(despesa.id)}
                                 className="bg-red-500 text-white px-4 py-2 rounded"
                             >
                                 Excluir
                             </button>
                             <button
-                                onClick={() => handleEditReceita(despesa)}
+                                onClick={() => handleEditDespesa(despesa)}
                                 className="bg-blue-500 text-white px-4 py-2 rounded"
                             >
                                 Editar
