@@ -7,7 +7,7 @@ const getAuthHeaders = (token) => ({
 
 export const listarDespesas = async (token, userId) => {
     try {
-        const response = await fetch(`${API_URL}/listar-despesas?usuarioId=${userId}`, {
+        const response = await fetch(`${API_URL}/listar-despesas/${userId}`, {
             headers: getAuthHeaders(token)
         });
         if (!response.ok) {
@@ -69,9 +69,9 @@ export const deletarDespesa = async (id, token) => {
     }
 };
 
-export const listarDespesasPorMes = async (ano, mes, token) => {
+export const listarDespesasPorMes = async (ano, mes, token, userId) => {
     try {
-        const response = await fetch(`${API_URL}/despesas/mes/${ano}/${mes}`, {
+        const response = await fetch(`${API_URL}/despesas/${userId}/mes/${ano}/${mes}`, {
             headers: getAuthHeaders(token)
         });
         if (!response.ok) {
@@ -83,9 +83,9 @@ export const listarDespesasPorMes = async (ano, mes, token) => {
     }
 };
 
-export const listarDespesasPorPeriodo = async (dataInicio, dataFim, token) => {
+export const listarDespesasPorPeriodo = async (dataInicio, dataFim, token, userId) => {
     try {
-        const response = await fetch(`${API_URL}/despesas/periodo?dataInicio=${dataInicio}&dataFim=${dataFim}`, {
+        const response = await fetch(`${API_URL}/despesas/${userId}/periodo?dataInicio=${dataInicio}&dataFim=${dataFim}`, {
             headers: getAuthHeaders(token)
         });
         if (!response.ok) {
@@ -97,9 +97,9 @@ export const listarDespesasPorPeriodo = async (dataInicio, dataFim, token) => {
     }
 };
 
-export const listarMaioresDespesas = async (limite, token) => {
+export const listarMaioresDespesas = async (limite, token, userId) => {
     try {
-        const response = await fetch(`${API_URL}/despesas/maiores?limite=${limite}`, {
+        const response = await fetch(`${API_URL}/despesas/${userId}/maiores?limite=${limite}`, {
             headers: getAuthHeaders(token)
         });
         if (!response.ok) {
@@ -111,9 +111,9 @@ export const listarMaioresDespesas = async (limite, token) => {
     }
 };
 
-export const listarMenoresDespesas = async (limite, token) => {
+export const listarMenoresDespesas = async (limite, token, userId) => {
     try {
-        const response = await fetch(`${API_URL}/despesas/menores?limite=${limite}`, {
+        const response = await fetch(`${API_URL}/despesas/${userId}/menores?limite=${limite}`, {
             headers: getAuthHeaders(token)
         });
         if (!response.ok) {

@@ -140,7 +140,7 @@ const Dashboard = ({ token }) => {
                 case 'porMes':
                     const { ano, mes } = filtros;
                     if (ano && mes) {
-                        const receitasPorMes = await listarReceitasPorMes(ano, mes, token);
+                        const receitasPorMes = await listarReceitasPorMes(ano, mes, token, userId);
                         setReceitasFiltradas(receitasPorMes);
                     } else {
                         alert('Preencha o ano e o mês para filtrar.');
@@ -149,7 +149,7 @@ const Dashboard = ({ token }) => {
                 case 'porPeriodo':
                     const { dataInicio, dataFim } = filtros;
                     if (dataInicio && dataFim) {
-                        const receitasPorPeriodo = await listarReceitasPorPeriodo(dataInicio, dataFim, token);
+                        const receitasPorPeriodo = await listarReceitasPorPeriodo(dataInicio, dataFim, token, userId);
                         setReceitasFiltradas(receitasPorPeriodo);
                     } else {
                         alert('Preencha as datas de início e fim para filtrar.');
@@ -157,7 +157,7 @@ const Dashboard = ({ token }) => {
                     break;
                 case 'maiores':
                     if (filtros.limite) {
-                        const maioresReceitas = await listarMaioresReceitas(filtros.limite, token);
+                        const maioresReceitas = await listarMaioresReceitas(filtros.limite, token, userId);
                         setReceitasFiltradas(maioresReceitas);
                     } else {
                         alert('Preencha o limite para filtrar.');
@@ -165,7 +165,7 @@ const Dashboard = ({ token }) => {
                     break;
                 case 'menores':
                     if (filtros.limite) {
-                        const menoresReceitas = await listarMenoresReceitas(filtros.limite, token);
+                        const menoresReceitas = await listarMenoresReceitas(filtros.limite, token, userId);
                         setReceitasFiltradas(menoresReceitas);
                     } else {
                         alert('Preencha o limite para filtrar.');
@@ -183,13 +183,13 @@ const Dashboard = ({ token }) => {
         try {
             switch (filtroSelecionado) {
                 case 'todas':
-                    const todasDespesas = await listarDespesas(token, userId);
+                    const todasDespesas = await listarDespesas(token, userId, userId);
                     setDespesasFiltradas(todasDespesas);
                     break;
                 case 'porMes':
                     const { ano, mes } = filtros;
                     if (ano && mes) {
-                        const receitasPorMes = await listarDespesasPorMes(ano, mes, token);
+                        const receitasPorMes = await listarDespesasPorMes(ano, mes, token, userId);
                         setDespesasFiltradas(receitasPorMes);
                     } else {
                         alert('Preencha o ano e o mês para filtrar.');
@@ -198,7 +198,7 @@ const Dashboard = ({ token }) => {
                 case 'porPeriodo':
                     const { dataInicio, dataFim } = filtros;
                     if (dataInicio && dataFim) {
-                        const despesasPorPeriodo = await listarDespesasPorPeriodo(dataInicio, dataFim, token);
+                        const despesasPorPeriodo = await listarDespesasPorPeriodo(dataInicio, dataFim, token, userId);
                         setDespesasFiltradas(despesasPorPeriodo);
                     } else {
                         alert('Preencha as datas de início e fim para filtrar.');
@@ -206,7 +206,7 @@ const Dashboard = ({ token }) => {
                     break;
                 case 'maiores':
                     if (filtros.limite) {
-                        const maioresDespesas = await listarMaioresDespesas(filtros.limite, token);
+                        const maioresDespesas = await listarMaioresDespesas(filtros.limite, token, userId);
                         setDespesasFiltradas(maioresDespesas);
                     } else {
                         alert('Preencha o limite para filtrar.');
@@ -214,7 +214,7 @@ const Dashboard = ({ token }) => {
                     break;
                 case 'menores':
                     if (filtros.limite) {
-                        const menoresDespesas = await listarMenoresDespesas(filtros.limite, token);
+                        const menoresDespesas = await listarMenoresDespesas(filtros.limite, token, userId);
                         setDespesasFiltradas(menoresDespesas);
                     } else {
                         alert('Preencha o limite para filtrar.');
@@ -332,7 +332,7 @@ return (
 
                 <button
                     onClick={aplicarFiltroReceita}
-                    className="bg-blue-600 text-white px-6 py-3 rounded-lg w-full"
+                    className="bg-blue-500 text-white p-2 rounded w-full border-2 border-blue-500 transition-colors duration-300 ease-in-out hover:bg-white hover:text-blue-500 hover:border-blue-500 active:bg-gray-200 active:text-blue-600"                
                 >
                     Aplicar Filtro
                 </button>

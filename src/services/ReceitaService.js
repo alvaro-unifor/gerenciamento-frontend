@@ -8,12 +8,12 @@ const getAuthHeaders = (token) => ({
 export const criarReceita = async (receita, token) => {
     try {
         const userId = localStorage.getItem('id');
-        const despesaComUsuario = { ...receita, usuario: userId };
+        const receitaComUsuario = { ...receita, usuario: userId };
 
-        const response = await fetch(`${API_URL}/criar-receita`,  {
+        const response = await fetch(`${API_URL}/criar-receita`, {
             method: 'POST',
             headers: getAuthHeaders(token),
-            body: JSON.stringify(despesaComUsuario)
+            body: JSON.stringify(receitaComUsuario)
         });
         if (!response.ok) {
             throw new Error('Network response was not ok ' + response.statusText);
@@ -57,20 +57,7 @@ export const deletarReceita = async (id, token) => {
 
 export const listarReceitas = async (token, userId) => {
     try {
-        const response = await fetch(`${API_URL}/listar-receitas?usuarioId=${userId}`, {
-            headers: getAuthHeaders(token)
-        });
-        if (!response.ok) {
-            throw new Error('Network response was not ok ' + response.statusText);
-        }
-        return await response.json();
-    } catch (error) {
-        console.error('There was a problem with the fetch operation:', error);
-    }
-};
-export const listarReceitasPorMes = async (ano, mes, token) => {
-    try {
-        const response = await fetch(`${API_URL}/receitas/mes/${ano}/${mes}`, {
+        const response = await fetch(`${API_URL}/listar-receitas/${userId}`, {
             headers: getAuthHeaders(token)
         });
         if (!response.ok) {
@@ -82,9 +69,9 @@ export const listarReceitasPorMes = async (ano, mes, token) => {
     }
 };
 
-export const listarReceitasPorPeriodo = async (dataInicio, dataFim, token) => {
+export const listarReceitasPorMes = async (ano, mes, token, userId) => {
     try {
-        const response = await fetch(`${API_URL}/receitas/periodo?dataInicio=${dataInicio}&dataFim=${dataFim}`, {
+        const response = await fetch(`${API_URL}/receitas/${userId}/mes/${ano}/${mes}`, {
             headers: getAuthHeaders(token)
         });
         if (!response.ok) {
@@ -96,9 +83,9 @@ export const listarReceitasPorPeriodo = async (dataInicio, dataFim, token) => {
     }
 };
 
-export const listarMaioresReceitas = async (limite, token) => {
+export const listarReceitasPorPeriodo = async (dataInicio, dataFim, token, userId) => {
     try {
-        const response = await fetch(`${API_URL}/receitas/maiores?limite=${limite}`, {
+        const response = await fetch(`${API_URL}/receitas/${userId}/periodo?dataInicio=${dataInicio}&dataFim=${dataFim}`, {
             headers: getAuthHeaders(token)
         });
         if (!response.ok) {
@@ -110,9 +97,23 @@ export const listarMaioresReceitas = async (limite, token) => {
     }
 };
 
-export const listarMenoresReceitas = async (limite, token) => {
+export const listarMaioresReceitas = async (limite, token, userId) => {
     try {
-        const response = await fetch(`${API_URL}/receitas/menores?limite=${limite}`, {
+        const response = await fetch(`${API_URL}/receitas/${userId}/maiores?limite=${limite}`, {
+            headers: getAuthHeaders(token)
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+    }
+};
+
+export const listarMenoresReceitas = async (limite, token, userId) => {
+    try {
+        const response = await fetch(`${API_URL}/receitas/${userId}/menores?limite=${limite}`, {
             headers: getAuthHeaders(token)
         });
         if (!response.ok) {
